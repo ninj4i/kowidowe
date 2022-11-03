@@ -30,4 +30,4 @@ print(f'{i: ^5} : ')
 for w in kowidowe[707].columns:
     print(w)
 
-print(kowidowe[707])
+print(kowidowe[,2707])
