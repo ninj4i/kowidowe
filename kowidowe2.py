@@ -30,4 +30,24 @@ print(f'{i: ^5} : ')
 for w in kowidowe[707].columns:
     print(w)
 
-print(kowidowe[,2707])
+print(f"""
+{len(kowidowe)=}
+""")
+
+a = [list(c.columns.values) for c in kowidowe]
+
+aa = {0: a[0]}
+
+for i in range(1,len(a)):
+    if a[i] != a[i-1]:
+        aa[i] = a[i]
+
+print(f'{len(aa)}')
+
+for k, v in aa.items():
+    print(k)
+    for j in v:
+        print(f'\t\t{j}')
+
+print(kowidowe[100])
+
