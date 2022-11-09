@@ -29,7 +29,6 @@ arch_data = pd.DataFrame()
 arch_data['Data'] = pd.to_datetime(arch_data0['Data'], format='%d.%m.%Y')
 arch_data['Liczba Przypadkow'] = arch_data0['Nowe przypadki'].astype('int')
 arch_data.index = arch_data['Data']
-
 arch_data0['Data'] = pd.to_datetime(arch_data0['Data'], format='%d.%m.%Y')
 
 zgony0 = pd.DataFrame()
@@ -53,27 +52,22 @@ zgony1.index = zgony1['Data']
 
 nazwa_kolumny = ['liczba_wszystkich_zakazen', 'liczba_nowych_zakazen', 'liczba_ponownych_zakazen']
 przypadki = {'Data': [], 'liczba_wszystkich_zakazen' :[], 'liczba_nowych_zakazen': [], 'liczba_ponownych_zakazen': []}
-przypadki_woj = {'Data' : [], 'liczba_wszystkich_zakazen' :[]}
+
 
 for i, _ in enumerate(lista_plikow):
     odczytane_dane= pd.read_csv(lista_plikow[i], sep = ';',decimal=' ', encoding= 'windows-1250')
     przypadki['Data'].append(pd.to_datetime(str(lista_plikow[i])[11:19],format='%Y%m%d'))
-    przypadki_woj['Data'].append(pd.to_datetime(str(lista_plikow[i])[11:19],format='%Y%m%d'))
     if 'liczba_przypadkow' in odczytane_dane.columns.values:
         przypadki[nazwa_kolumny[0]].append(odczytane_dane.loc[0,'liczba_przypadkow'])
         przypadki[nazwa_kolumny[1]].append(np.nan)
         przypadki[nazwa_kolumny[2]].append(np.nan)
-        przypadki_woj[nazwa_kolumny[0]].append(odczytane_dane.iloc[1:-1,0:2])
+
     else:
         przypadki[nazwa_kolumny[0]].append(odczytane_dane.loc[0,nazwa_kolumny[0]])
         przypadki[nazwa_kolumny[1]].append(odczytane_dane.loc[0,nazwa_kolumny[1]])
         przypadki[nazwa_kolumny[2]].append(odczytane_dane.loc[0,nazwa_kolumny[2]])
-        przypadki_woj[nazwa_kolumny[0]].append(odczytane_dane.iloc[1:-1,0:2])
-
-przypadki_woj['Data'] = przypadki['Data']
 
 print('AAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCC')
-print(przypadki_woj['liczba_wszystkich_zakazen'][0])
 
 przypadki = pd.DataFrame(przypadki)
 
@@ -123,3 +117,10 @@ axs['B'].grid(axis = 'both', c = '0.90')
 plt.tight_layout()
 
 plt.show()
+
+
+print(pd.concat([pd.read_csv(lista_plikow[0], sep = ';',decimal=' ', encoding= 'utf-8',index_col='teryt').iloc[1:,[1]].transpose(),\
+pd.read_csv(lista_plikow[1], sep = ';',decimal=' ', encoding= 'utf-8',index_col='teryt').iloc[1:,[1]].transpose()]))
+
+
+#print(pd.read_csv(lista_plikow[1], sep = ';',decimal=' ', encoding= 'utf-8',index_col='teryt').iloc[1:,[1]].transpose())
