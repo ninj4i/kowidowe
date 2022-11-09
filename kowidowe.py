@@ -125,7 +125,7 @@ axs['B'].legend()
 axs['B'].set_ylabel('ilość dziennych zgonów')
 axs['B'].grid(axis = 'both', c = '0.90')
 
-sns.catplot (y = przypadki_woj1.sum(), ax = axs['C'])
+sns.distplot (y = przypadki_woj1.sum(), ax = axs['C'])
 
 print(przypadki_woj1)
 
