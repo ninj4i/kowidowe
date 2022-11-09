@@ -16,6 +16,8 @@ for plik in lista_plikow:
 
 print(len(kowidowe))
 
+arch_data0 = pd.read_csv(pathlib.Path('dane/mat_arch.csv'), sep = ';',decimal=' ', encoding= 'windows-1250')
+print(arch_data0.columns)
 
 for i in range(1, len(kowidowe)):
     if list(kowidowe[i].columns) == list(kowidowe[i-1].columns):

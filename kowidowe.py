@@ -21,30 +21,17 @@ wstępnie niepotrzebne linie bo mamy na dysku pliki
 #with zipfile.ZipFile('dane//dane.zip') as spaklowany_plik:
 #    spaklowany_plik.extractall(pathlib.Path('dane/pliki'))
 
-
 lista_plikow = list(pathlib.Path.glob(pathlib.Path('dane/pliki'), '*.csv'))
 
-for i in lista_plikow[:5]:
-    print(i)
 
 arch_data0 = pd.read_csv(pathlib.Path('dane/mat_arch.csv'), sep = ';',decimal=' ', encoding= 'windows-1250')
-print(arch_data0.columns)
 arch_data = pd.DataFrame()
 arch_data['Data'] = pd.to_datetime(arch_data0['Data'], format='%d.%m.%Y')
 arch_data['Liczba Przypadkow'] = arch_data0['Nowe przypadki'].astype('int')
 arch_data.index = arch_data['Data']
 
 arch_data0['Data'] = pd.to_datetime(arch_data0['Data'], format='%d.%m.%Y')
-"""
-DF ze zgonami
-kolumny:
-    Data
-    zgony_wszystkie
-    zgony_w_wyniku_covid_bez_chorob_wspolistniejacych
-    zgony_w_wyniku_covid_i_chorob_wspolistniejacych
-index:
-    Data
-"""
+
 zgony0 = pd.DataFrame()
 zgony0['Data']  = pd.to_datetime(arch_data0['Data'], format='%d.%m.%Y')
 zgony0['zgony'] = arch_data0['Zgony'].astype('int')
@@ -63,75 +50,54 @@ zgony1 = pd.DataFrame(zgony1, index = zgony1['Data'])
 zgony1.columns = ['Data', 'zgony', 'zgony_w_wyniku_covid_bez_chorob_wspolistniejacych','zgony_w_wyniku_covid_i_chorob_wspolistniejacych']
 zgony1 = pd.concat([zgony0,zgony1])
 zgony1.index = zgony1['Data']
-print(zgony1)
 
 nazwa_kolumny = ['liczba_wszystkich_zakazen', 'liczba_nowych_zakazen', 'liczba_ponownych_zakazen']
 przypadki = {'Data': [], 'liczba_wszystkich_zakazen' :[], 'liczba_nowych_zakazen': [], 'liczba_ponownych_zakazen': []}
+przypadki_woj = {'Data' : [], 'liczba_wszystkich_zakazen' :[]}
 
 for i, _ in enumerate(lista_plikow):
     odczytane_dane= pd.read_csv(lista_plikow[i], sep = ';',decimal=' ', encoding= 'windows-1250')
     przypadki['Data'].append(pd.to_datetime(str(lista_plikow[i])[11:19],format='%Y%m%d'))
+    przypadki_woj['Data'].append(pd.to_datetime(str(lista_plikow[i])[11:19],format='%Y%m%d'))
     if 'liczba_przypadkow' in odczytane_dane.columns.values:
         przypadki[nazwa_kolumny[0]].append(odczytane_dane.loc[0,'liczba_przypadkow'])
         przypadki[nazwa_kolumny[1]].append(np.nan)
         przypadki[nazwa_kolumny[2]].append(np.nan)
+        przypadki_woj[nazwa_kolumny[0]].append(odczytane_dane.iloc[1:-1,0:2])
     else:
         przypadki[nazwa_kolumny[0]].append(odczytane_dane.loc[0,nazwa_kolumny[0]])
         przypadki[nazwa_kolumny[1]].append(odczytane_dane.loc[0,nazwa_kolumny[1]])
         przypadki[nazwa_kolumny[2]].append(odczytane_dane.loc[0,nazwa_kolumny[2]])
+        przypadki_woj[nazwa_kolumny[0]].append(odczytane_dane.iloc[1:-1,0:2])
+
+przypadki_woj['Data'] = przypadki['Data']
+
+print('AAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCC')
+print(przypadki_woj['liczba_wszystkich_zakazen'][0])
 
 przypadki = pd.DataFrame(przypadki)
-print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-print(przypadki)
-print('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')
+
 #plt.rcParams['size']
 plt.rcParams['figure.dpi']     = 100
-plt.rcParams['figure.figsize'] = 15,10
-
-print(plt.rcParams['axes.prop_cycle'])
+plt.rcParams['figure.figsize'] = 15,12
 plt.rcParams['axes.prop_cycle'] = cycler('color', ['cadetblue','orangered','limegreen', 'navy'])
-#kokokoko = []
-#kokokoko.append(pd.DataFrame().assign(data = arch_data.loc[:,'Data'], liczba_przypadkow = arch_data.loc[:,'Nowe przypadki']))
-#for plik in lista_plikow[:2]:
-#    ko = pd.read_csv(plik)
-#    print(ko.columns = ['Data', 'columns']
-#    kokokoko.append(ko.iloc[0,1])
-
-
-print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
-
-#koko =pd.concat(kokokoko)
-
-#sns.scatterplot(data = koko, x = 'data', y = 'liczba_przypadkow', size= 1, legend = False)
-#plt.show()
-#print(kokokoko)
-
 
 nazwa_kolumny = ['liczba_wszystkich_zakazen', 'liczba_nowych_zakazen', 'liczba_ponownych_zakazen']
-#x.append(arch_data)////////
 
 przypadki0 = pd.DataFrame()
 przypadki0['Data'] = arch_data0['Data']
 przypadki0['liczba_wszystkich_zakazen'] = arch_data0['Nowe przypadki']
-#przypadki0.index = przypadki0['Data']
 
 przypadki1 = pd.concat([przypadki0, przypadki])
 przypadki1.index = przypadki1['Data']
-print('///////////////////////////////')
-print(przypadki1.describe())
-print('///////////////////////////////')
-print(zgony1.describe())
-print('///////////////////////////////')
 
 fig, axs = plt.subplot_mosaic(mosaic="""
-A
-B
+AAAC
+BBB.
 """)
 print(fig)
 print(axs)
-print('///////////////////////////////')
-for i in range(5):
-    print(przypadki1.rolling(window = 7).mean())
+
 
 sns.lineplot(data = przypadki1, x = przypadki1['Data'], y = 'liczba_wszystkich_zakazen', ax = axs['A'], label = 'Wszystkie przypadki dzienne')
 sns.lineplot(data = przypadki1.rolling(window = 7).mean(), x = przypadki1['Data'], y = 'liczba_wszystkich_zakazen', ax = axs['A'], label = 'Wygładzony przebieg dziennych zakarzeń')
@@ -142,6 +108,7 @@ sns.lineplot(data = przypadki1.rolling(window = 7).mean(), x = przypadki1['Data'
 axs['A'].set_xticks(pd.to_datetime([f'{yr}-{mo}-01' for mo in range(1,13) for yr in range(2020, 2023)]))
 axs['A'].set_xticklabels(rotation = 45, size = 7, labels = [f'{yr}-{mo}' for mo in range(1,13) for yr in range(2020, 2023)])
 axs['A'].legend()
+axs['A'].set_ylabel('ilość dziennych zakarzeń')
 axs['A'].grid(axis = 'both', c = '0.90')
 
 sns.lineplot(data = zgony1.rolling(window = 7).mean(), x = 'Data', y = 'zgony', legend = True, ax = axs['B'], label = 'Wszystkie zgony')
@@ -151,6 +118,7 @@ sns.lineplot(data = zgony1.rolling(window = 7).mean(), x = 'Data', y = 'zgony_w_
 axs['B'].set_xticks(pd.to_datetime([f'{yr}-{mo}-01' for mo in range(1,13) for yr in range(2020, 2023)]))
 axs['B'].set_xticklabels(rotation = 45, size = 7, labels = [f'{yr}-{mo}' for mo in range(1,13) for yr in range(2020, 2023)])
 axs['B'].legend()
+axs['B'].set_ylabel('ilość dziennych zgonów')
 axs['B'].grid(axis = 'both', c = '0.90')
 plt.tight_layout()
 
