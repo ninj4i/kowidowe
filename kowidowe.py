@@ -2,6 +2,7 @@ import requests
 import zipfile
 import pathlib
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import datetime
@@ -30,9 +31,10 @@ arch_data0 = pd.read_csv(pathlib.Path('dane/mat_arch.csv'), sep = ';',decimal=' 
 print(arch_data0.columns)
 arch_data = pd.DataFrame()
 arch_data['Data'] = pd.to_datetime(arch_data0['Data'], format='%d.%m.%Y')
-arch_data[''] = arch_data0['Nowe przypadki'].astype('int')
+arch_data['Liczba Przypadkow'] = arch_data0['Nowe przypadki'].astype('int')
 arch_data.index = arch_data['Data']
 
+arch_data0['Data'] = pd.to_datetime(arch_data0['Data'], format='%d.%m.%Y')
 """
 DF ze zgonami
 kolumny:
@@ -61,27 +63,33 @@ zgony1 = pd.DataFrame(zgony1, index = zgony1['Data'])
 zgony1.columns = ['Data', 'zgony', 'zgony_w_wyniku_covid_bez_chorob_wspolistniejacych','zgony_w_wyniku_covid_i_chorob_wspolistniejacych']
 zgony1 = pd.concat([zgony0,zgony1])
 zgony1.index = zgony1['Data']
-
+print(zgony1)
 
 nazwa_kolumny = ['liczba_wszystkich_zakazen', 'liczba_nowych_zakazen', 'liczba_ponownych_zakazen']
-przypadki = {'Data': [], nazwa_kolumny[0] :[], nazwa_kolumny[1]: [], nazwa_kolumny[2]: []}
+przypadki = {'Data': [], 'liczba_wszystkich_zakazen' :[], 'liczba_nowych_zakazen': [], 'liczba_ponownych_zakazen': []}
 
 for i, _ in enumerate(lista_plikow):
     odczytane_dane= pd.read_csv(lista_plikow[i], sep = ';',decimal=' ', encoding= 'windows-1250')
-
     przypadki['Data'].append(pd.to_datetime(str(lista_plikow[i])[11:19],format='%Y%m%d'))
-    przypadki[nazwa/+_{_kolumny[0]].append(odczytane_dane.loc[0,nazwa_kolumny[0]])
-    przypadki[nazwa_kolumny[1]].append(odczytane_dane.loc[0,nazwa_kolumny[1]])
-    przypadki[nazwa_kolumny[2]].append(odczytane_dane.loc[0,nazwa_kolumny[2]])
+    if 'liczba_przypadkow' in odczytane_dane.columns.values:
+        przypadki[nazwa_kolumny[0]].append(odczytane_dane.loc[0,'liczba_przypadkow'])
+        przypadki[nazwa_kolumny[1]].append(np.nan)
+        przypadki[nazwa_kolumny[2]].append(np.nan)
+    else:
+        przypadki[nazwa_kolumny[0]].append(odczytane_dane.loc[0,nazwa_kolumny[0]])
+        przypadki[nazwa_kolumny[1]].append(odczytane_dane.loc[0,nazwa_kolumny[1]])
+        przypadki[nazwa_kolumny[2]].append(odczytane_dane.loc[0,nazwa_kolumny[2]])
 
-
-print(zgony1)
+przypadki = pd.DataFrame(przypadki)
+print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+print(przypadki)
+print('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')
 #plt.rcParams['size']
 plt.rcParams['figure.dpi']     = 100
 plt.rcParams['figure.figsize'] = 15,10
 
 print(plt.rcParams['axes.prop_cycle'])
-plt.rcParams['axes.prop_cycle'] = cycler('color', ['cadetblue','orangered','darkolivegreen'])
+plt.rcParams['axes.prop_cycle'] = cycler('color', ['cadetblue','orangered','limegreen', 'navy'])
 #kokokoko = []
 #kokokoko.append(pd.DataFrame().assign(data = arch_data.loc[:,'Data'], liczba_przypadkow = arch_data.loc[:,'Nowe przypadki']))
 #for plik in lista_plikow[:2]:
@@ -89,7 +97,7 @@ plt.rcParams['axes.prop_cycle'] = cycler('color', ['cadetblue','orangered','dark
 #    print(ko.columns = ['Data', 'columns']
 #    kokokoko.append(ko.iloc[0,1])
 
-print(arch_data)
+
 print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
 
 #koko =pd.concat(kokokoko)
@@ -100,33 +108,36 @@ print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
 
 
 nazwa_kolumny = ['liczba_wszystkich_zakazen', 'liczba_nowych_zakazen', 'liczba_ponownych_zakazen']
-#x.append(arch_data)
+#x.append(arch_data)////////
 
-for i, _ in enumerate(lista_plikow):
-    nazwa_kolumny = 'liczba_przypadkow' if 'liczba_przypadkow' in list(pd.read_csv(lista_plikow[i], sep = ';',decimal=' ', encoding= 'windows-1250').columns.values) else 'liczba_nowych_zakazen'
-    #print(pd.to_datetime(str(lista_plikow[i])[11:19],format='%Y%m%d')-datetime.timedelta(days = 1))
-    #print(f"\t {pd.read_csv(lista_plikow[i], sep = ';',decimal=' ', encoding= 'windows-1250').loc[0,nazwa_kolumny]}")
-    x.append([pd.to_datetime(str(lista_plikow[i])[11:19],format='%Y%m%d'),\
-        pd.read_csv(lista_plikow[i], sep = ';',decimal=' ', encoding= 'windows-1250').loc[0,nazwa_kolumny]])
+przypadki0 = pd.DataFrame()
+przypadki0['Data'] = arch_data0['Data']
+przypadki0['liczba_wszystkich_zakazen'] = arch_data0['Nowe przypadki']
+#przypadki0.index = przypadki0['Data']
 
-liczba_nowych_zakazen;liczba_ponownych_zakazen;liczba_wszystkich_zakazen
-#print(pd.DataFrame(x))
-y = pd.DataFrame(x, columns=['Data', 'liczba_wszystkich_zakazen'])
-y.index = y['Data']
-przypadki = pd.concat([arch_data, przypadki])
-print()
-przypadki.columns = ['Data', 'Liczba Przypadkow']
-przypadki.index = X['Data']
+przypadki1 = pd.concat([przypadki0, przypadki])
+przypadki1.index = przypadki1['Data']
+print('///////////////////////////////')
+print(przypadki1.describe())
+print('///////////////////////////////')
+print(zgony1.describe())
+print('///////////////////////////////')
 
 fig, axs = plt.subplot_mosaic(mosaic="""
 A
 B
 """)
+print(fig)
+print(axs)
+print('///////////////////////////////')
+for i in range(5):
+    print(przypadki1.rolling(window = 7).mean())
 
-
-sns.lineplot(data = X, x = 'Data', y = 'Liczba Przypadkow', legend=False, ax = axs['A'], label = 'Przypadki dzienne')
-sns.lineplot(data = X.rolling(window = 7).mean(), x = 'Data', y = 'Liczba Przypadkow', legend=False, ax = axs['A'], label = 'Wygładzony przebieg')
-#sns.lineplot(data = X, x = 'Data', y = X['Liczba Przypadkow'].cumsum(), size= 1, legend=False)
+sns.lineplot(data = przypadki1, x = przypadki1['Data'], y = 'liczba_wszystkich_zakazen', ax = axs['A'], label = 'Wszystkie przypadki dzienne')
+sns.lineplot(data = przypadki1.rolling(window = 7).mean(), x = przypadki1['Data'], y = 'liczba_wszystkich_zakazen', ax = axs['A'], label = 'Wygładzony przebieg dziennych zakarzeń')
+sns.lineplot(data = przypadki1.rolling(window = 7).mean(), x = przypadki1['Data'], y = 'liczba_nowych_zakazen', ax = axs['A'], label = 'Wygładzony przebieg nowych dziennych zakarzeń')
+sns.lineplot(data = przypadki1.rolling(window = 7).mean(), x = przypadki1['Data'], y = 'liczba_ponownych_zakazen', ax = axs['A'], label = 'Wygładzony przebieg PONOWNYCH dziennych zakarzeń')
+#sns.lineplot(data = X, x = 'Data', y = X['Liczba Przypadkow'].cumsum(), size= 1, legend=False)//////////////////
 
 axs['A'].set_xticks(pd.to_datetime([f'{yr}-{mo}-01' for mo in range(1,13) for yr in range(2020, 2023)]))
 axs['A'].set_xticklabels(rotation = 45, size = 7, labels = [f'{yr}-{mo}' for mo in range(1,13) for yr in range(2020, 2023)])
