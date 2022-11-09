@@ -85,12 +85,22 @@ przypadki0['liczba_wszystkich_zakazen'] = arch_data0['Nowe przypadki']
 przypadki1 = pd.concat([przypadki0, przypadki])
 przypadki1.index = przypadki1['Data']
 
+
+
+przypadki_woj = []
+for i, _ in enumerate(lista_plikow):
+    odczytane_dane= pd.read_csv(lista_plikow[i], sep = ';',decimal=' ', encoding= 'windows-1250', index_col='teryt')
+    if 'liczba_przypadkow' in odczytane_dane.columns :
+        przypadki_woj.append(pd.read_csv(lista_plikow[i], sep = ';',decimal=' ', encoding= 'windows-1250',index_col='teryt').loc['t02':'t32',['liczba_przypadkow']].transpose())
+    else:
+        przypadki_woj.append(pd.read_csv(lista_plikow[i], sep = ';',decimal=' ', encoding= 'windows-1250',index_col='teryt').loc['t02':'t32',['liczba_nowych_zakazen']].transpose())
+przypadki_woj1 = pd.concat(przypadki_woj)
+przypadki_woj1 = przypadki_woj1.astype('int16')
+
 fig, axs = plt.subplot_mosaic(mosaic="""
 AAAC
 BBB.
 """)
-print(fig)
-print(axs)
 
 
 sns.lineplot(data = przypadki1, x = przypadki1['Data'], y = 'liczba_wszystkich_zakazen', ax = axs['A'], label = 'Wszystkie przypadki dzienne')
@@ -114,13 +124,16 @@ axs['B'].set_xticklabels(rotation = 45, size = 7, labels = [f'{yr}-{mo}' for mo 
 axs['B'].legend()
 axs['B'].set_ylabel('ilość dziennych zgonów')
 axs['B'].grid(axis = 'both', c = '0.90')
+
+sns.catplot (y = przypadki_woj1.sum(), ax = axs['C'])
+
+print(przypadki_woj1)
+
 plt.tight_layout()
 
 plt.show()
 
 
-print(pd.concat([pd.read_csv(lista_plikow[0], sep = ';',decimal=' ', encoding= 'utf-8',index_col='teryt').iloc[1:,[1]].transpose(),\
-pd.read_csv(lista_plikow[1], sep = ';',decimal=' ', encoding= 'utf-8',index_col='teryt').iloc[1:,[1]].transpose()]))
 
 
 #print(pd.read_csv(lista_plikow[1], sep = ';',decimal=' ', encoding= 'utf-8',index_col='teryt').iloc[1:,[1]].transpose())

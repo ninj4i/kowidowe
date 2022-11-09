@@ -10,15 +10,18 @@ Metodologia
 
 5) W raportach dziennych występują przypadki zaraportowania wyniku dodatniego bez przypisania do konkretnego województwa i powiatu, w związku z brakiem adresu pacjenta po stronie laboratorium. Wskazani pacjenci będą przypisywani do województw i powiatów przez stacje sanitarno-epidemiologiczne.
 
-6) liczba_przypadkow - Liczba osób dla których w ciągu wczorajszej doby do systemu EWP po raz pierwszy wpłynął wynik pozytywny. Nie jest to tożsame z pierwszą datą pozytywnego wyniku testu ze względu na opóźnienia w raportowaniu wyników. Laboratoria mogą wykonywać korekty wyników testów ale stanowi to mały promil przypadków.
+6) liczba_przypadkow - Liczba osób dla których w ciągu wczorajszej doby do systemu EWP po raz pierwszy wpłynął wynik pozytywny. 
+Nie jest to tożsame z pierwszą datą pozytywnego wyniku testu ze względu na opóźnienia w raportowaniu wyników. Laboratoria mogą wykonywać korekty wyników testów ale stanowi to mały promil przypadków.
 
 7) liczba_na_10_tys_mieszkancow	- Liczba osób dla których w ciągu wczorajszej doby do systemu EWP po raz pierwszy wpłynął wynik pozytywny w przeliczeniu na 10 tys mieszkańców.
 
 8) zgony - Liczba nowych zgonów które zostały wpisane do systemu EWP w ciągu ostatniej doby. Nie jest to tożsame z datą zgonu osoby. 
 
-9) zgony_w_wyniku_covid_bez_chorob_wspolistniejacych - Liczba nowych zgonów które zostały wpisane do systemu EWP w ciągu ostatniej doby gdzie na podstawie wywiadu i informacji od lekarza mamy informację o chorobach współistniejących osoby. 
+9) zgony_w_wyniku_covid_bez_chorob_wspolistniejacych - Liczba nowych zgonów które zostały wpisane do systemu EWP w ciągu ostatniej doby
+gdzie na podstawie wywiadu i informacji od lekarza mamy informację o chorobach współistniejących osoby. 
 
-10) zgony_w_wyniku_covid_i_chorob_wspolistniejacych - Liczba nowych zgonów które zostały wpisane do systemu EWP w ciągu ostatniej doby gdzie na podstawie wywiadu i informacji od lekarza nie mamy informacji o chorobach współistniejących osoby. 
+10) zgony_w_wyniku_covid_i_chorob_wspolistniejacych - Liczba nowych zgonów które zostały wpisane do systemu EWP w ciągu ostatniej doby 
+gdzie na podstawie wywiadu i informacji od lekarza nie mamy informacji o chorobach współistniejących osoby. 
 
 11) liczba_zlecen_poz - Liczba testów zleconych przez POZ w ciągu ostatniej doby.
 
