@@ -97,6 +97,8 @@ for i, _ in enumerate(lista_plikow):
 przypadki_woj1 = pd.concat(przypadki_woj)
 przypadki_woj1 = przypadki_woj1.astype('int16')
 
+woj_labels = odczytane_dane['wojewodztwo'].values
+
 fig, axs = plt.subplot_mosaic(mosaic="""
 AAAC
 BBB.
@@ -111,9 +113,10 @@ sns.lineplot(data = przypadki1.rolling(window = 7).mean(), x = przypadki1['Data'
 
 axs['A'].set_xticks(pd.to_datetime([f'{yr}-{mo}-01' for mo in range(1,13) for yr in range(2020, 2023)]))
 axs['A'].set_xticklabels(rotation = 45, size = 7, labels = [f'{yr}-{mo}' for mo in range(1,13) for yr in range(2020, 2023)])
-axs['A'].legend()
+axs['A'].legend(fontsize =  10, loc = 2)
 axs['A'].set_ylabel('ilość dziennych zakarzeń')
 axs['A'].grid(axis = 'both', c = '0.90')
+axs['A'].set_title('Ilość dobowych przyzpadków zakażeń', fontdict = {'fontsize' : 10}, loc = 'left')
 
 sns.lineplot(data = zgony1.rolling(window = 7).mean(), x = 'Data', y = 'zgony', legend = True, ax = axs['B'], label = 'Wszystkie zgony')
 sns.lineplot(data = zgony1.rolling(window = 7).mean(), x = 'Data', y = 'zgony_w_wyniku_covid_bez_chorob_wspolistniejacych', legend = True, ax = axs['B'], label = 'Zgony bez chorób wsp.')
@@ -121,13 +124,19 @@ sns.lineplot(data = zgony1.rolling(window = 7).mean(), x = 'Data', y = 'zgony_w_
 
 axs['B'].set_xticks(pd.to_datetime([f'{yr}-{mo}-01' for mo in range(1,13) for yr in range(2020, 2023)]))
 axs['B'].set_xticklabels(rotation = 45, size = 7, labels = [f'{yr}-{mo}' for mo in range(1,13) for yr in range(2020, 2023)])
-axs['B'].legend()
+axs['B'].legend(fontsize =  10, loc = 2)
 axs['B'].set_ylabel('ilość dziennych zgonów')
 axs['B'].grid(axis = 'both', c = '0.90')
+axs['B'].set_title('Ilość dobowych zgonów', fontdict = {'fontsize' : 10}, loc = 'left')
 
-sns.distplot (y = przypadki_woj1.sum(), ax = axs['C'])
-
-print(przypadki_woj1)
+#sns.barplot (data = przypadki_woj1, ax = axs['C'], orient= 'h')
+axs['C'].barh(y = [x for x in range(1,17)], width = przypadki_woj1.sum(), height = 0.9)
+axs['C'].set_yticks([x for x in range(1,17)])
+axs['C'].yaxis.tick_right()
+axs['C'].set_yticklabels(woj_labels[1:])
+axs['C'].grid(axis = 'x', c = '0.90' )
+axs['C'].set_title(f'Ilość przyzpadków zakażeń\nz podziałem na województwa\nod dn {przypadki["Data"][0].strftime("%Y-%m-%d")}', fontdict = {'fontsize' : 10})
+print(przypadki_woj1.sum())
 
 plt.tight_layout()
 
