@@ -12,7 +12,9 @@ from cycler import cycler
 wstępnie niepotrzebne linie bo mamy na dysku pliki
 """
 #r = requests.get('https://arcgis.com/sharing/rest/content/items/a8c562ead9c54e13a135b02e0d875ffb/data')
-#zawartosc = r.content
+#zawartosc = r.contentxs['A'].set_xticks(pd.to_datetime([f'{yr}-{mo}-01' for mo in range(1,13) for yr in range(2020, 2023)]))
+axs['A'].set_xticklabels(rotation = 45, size = 7, labels = [f'{yr}-{mo}' for mo in range(1,13) for yr in range(2020, 2023)])
+axs['A'].legend(fontsize =  10, loc = 2)
 
 #with open('dane//dane.zip', 'wb') as plik:
 #    plik.write(zawartosc)
@@ -74,7 +76,7 @@ przypadki = pd.DataFrame(przypadki)
 #plt.rcParams['size']
 plt.rcParams['figure.dpi']     = 100
 plt.rcParams['figure.figsize'] = 15,12
-plt.rcParams['axes.prop_cycle'] = cycler('color', ['cadetblue','orangered','limegreen', 'navy'])
+plt.rcParams['axes.prop_cycle'] = cycler('color', ['cadetblue','orangered','gold', 'navy'])
 
 nazwa_kolumny = ['liczba_wszystkich_zakazen', 'liczba_nowych_zakazen', 'liczba_ponownych_zakazen']
 
@@ -97,11 +99,18 @@ for i, _ in enumerate(lista_plikow):
 przypadki_woj1 = pd.concat(przypadki_woj)
 przypadki_woj1 = przypadki_woj1.astype('int16')
 
+zgony_woj = []
+for i, _ in enumerate(lista_plikow):
+    odczytane_dane = pd.read_csv(lista_plikow[i], sep = ';',decimal=' ', encoding= 'windows-1250', index_col='teryt')
+    zgony_woj.append(odczytane_dane.loc['t02':'t32',['zgony']].transpose())
+zgony_woj1 = pd.concat(zgony_woj)
+
 woj_labels = odczytane_dane['wojewodztwo'].values
+zgony_woj  = zgony_woj1.astype('int16')
 
 fig, axs = plt.subplot_mosaic(mosaic="""
 AAAC
-BBB.
+BBBD
 """)
 
 
@@ -111,12 +120,10 @@ sns.lineplot(data = przypadki1.rolling(window = 7).mean(), x = przypadki1['Data'
 sns.lineplot(data = przypadki1.rolling(window = 7).mean(), x = przypadki1['Data'], y = 'liczba_ponownych_zakazen', ax = axs['A'], label = 'Wygładzony przebieg PONOWNYCH dziennych zakarzeń')
 #sns.lineplot(data = X, x = 'Data', y = X['Liczba Przypadkow'].cumsum(), size= 1, legend=False)//////////////////
 
-axs['A'].set_xticks(pd.to_datetime([f'{yr}-{mo}-01' for mo in range(1,13) for yr in range(2020, 2023)]))
-axs['A'].set_xticklabels(rotation = 45, size = 7, labels = [f'{yr}-{mo}' for mo in range(1,13) for yr in range(2020, 2023)])
-axs['A'].legend(fontsize =  10, loc = 2)
+a
 axs['A'].set_ylabel('ilość dziennych zakarzeń')
 axs['A'].grid(axis = 'both', c = '0.90')
-axs['A'].set_title('Ilość dobowych przyzpadków zakażeń', fontdict = {'fontsize' : 10}, loc = 'left')
+axs['A'].set_title('Dobowa liczba przypadków zakażeń', fontdict = {'fontsize' : 10, 'weight' : 'bold'}, loc = 'left')
 
 sns.lineplot(data = zgony1.rolling(window = 7).mean(), x = 'Data', y = 'zgony', legend = True, ax = axs['B'], label = 'Wszystkie zgony')
 sns.lineplot(data = zgony1.rolling(window = 7).mean(), x = 'Data', y = 'zgony_w_wyniku_covid_bez_chorob_wspolistniejacych', legend = True, ax = axs['B'], label = 'Zgony bez chorób wsp.')
@@ -127,7 +134,7 @@ axs['B'].set_xticklabels(rotation = 45, size = 7, labels = [f'{yr}-{mo}' for mo 
 axs['B'].legend(fontsize =  10, loc = 2)
 axs['B'].set_ylabel('ilość dziennych zgonów')
 axs['B'].grid(axis = 'both', c = '0.90')
-axs['B'].set_title('Ilość dobowych zgonów', fontdict = {'fontsize' : 10}, loc = 'left')
+axs['B'].set_title('Dobowa liczba zgonów', fontdict = {'fontsize' : 10, 'weight' : 'bold'}, loc = 'left', y = -0.15)
 
 #sns.barplot (data = przypadki_woj1, ax = axs['C'], orient= 'h')
 axs['C'].barh(y = [x for x in range(1,17)], width = przypadki_woj1.sum(), height = 0.9)
@@ -135,7 +142,18 @@ axs['C'].set_yticks([x for x in range(1,17)])
 axs['C'].yaxis.tick_right()
 axs['C'].set_yticklabels(woj_labels[1:])
 axs['C'].grid(axis = 'x', c = '0.90' )
-axs['C'].set_title(f'Ilość przyzpadków zakażeń\nz podziałem na województwa\nod dn {przypadki["Data"][0].strftime("%Y-%m-%d")}', fontdict = {'fontsize' : 10})
+axs['C'].set_title(f'liczba przypadków zakażeń\nz podziałem na województwa\nod dn {przypadki["Data"][0].strftime("%Y-%m-%d")}', fontdict = {'fontsize' : 10, 'weight' : 'bold'})
+
+axs['D'].barh(y = [x for x in range(1,17)], width = przypadki_woj1.sum(), height = 0.9)
+axs['D'].set_yticks([x for x in range(1,17)])
+axs['D'].yaxis.tick_right()
+axs['D'].set_yticklabels(woj_labels[1:])
+axs['D'].grid(axis = 'x', c = '0.90' )
+axs['D'].set_title(f'liczba przypadków zakażeń\nz podziałem na województwa\nod dn {przypadki["Data"][0].strftime("%Y-%m-%d")}', fontdict = {'fontsize' : 10, 'weight' : 'bold'})
+
+
+
+
 print(przypadki_woj1.sum())
 
 plt.tight_layout()
