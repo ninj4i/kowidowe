@@ -13,9 +13,6 @@ wstępnie niepotrzebne linie bo mamy na dysku pliki
 """
 r = requests.get('https://arcgis.com/sharing/rest/content/items/a8c562ead9c54e13a135b02e0d875ffb/data')
 zawartosc = r.content
-#['A'].set_xticks(pd.to_datetime([f'{yr}-{mo}-01' for mo in range(1,13) for yr in range(2020, 2023)]))
-#axs['A'].set_xticklabels(rotation = 45, size = 7, labels = [f'{yr}-{mo}' for mo in range(1,13) for yr in range(2020, 2023)])
-#axs['A'].legend(fontsize =  10, loc = 2)
 
 with open('dane//dane.zip', 'wb') as plik:
     plik.write(zawartosc)
@@ -70,8 +67,6 @@ for i, _ in enumerate(lista_plikow):
         przypadki[nazwa_kolumny[1]].append(odczytane_dane.loc[0,nazwa_kolumny[1]])
         przypadki[nazwa_kolumny[2]].append(odczytane_dane.loc[0,nazwa_kolumny[2]])
 
-print('AAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCC')
-
 przypadki = pd.DataFrame(przypadki)
 
 #plt.rcParams['size']
@@ -83,6 +78,7 @@ nazwa_kolumny = ['liczba_wszystkich_zakazen', 'liczba_nowych_zakazen', 'liczba_p
 
 przypadki0 = pd.DataFrame()
 przypadki0['Data'] = arch_data0['Data']
+
 przypadki0['liczba_wszystkich_zakazen'] = arch_data0['Nowe przypadki']
 
 przypadki1 = pd.concat([przypadki0, przypadki])
@@ -120,9 +116,10 @@ sns.lineplot(data = przypadki1.rolling(window = 7,min_periods = 1).mean(), x = p
 sns.lineplot(data = przypadki1.rolling(window = 7,min_periods = 1).mean(), x = przypadki1['Data'], y = 'liczba_nowych_zakazen', ax = axs['A'], label = 'Wygładzony przebieg nowych dziennych zakarzeń')
 sns.lineplot(data = przypadki1.rolling(window = 7,min_periods = 1).mean(), x = przypadki1['Data'], y = 'liczba_ponownych_zakazen', ax = axs['A'], label = 'Wygładzony przebieg PONOWNYCH dziennych zakarzeń')
 
-
+axs['A'].set_xticks(pd.to_datetime([f'{yr}-{mo}-01' for mo in range(1,13) for yr in range(2020, 2023)]))
+axs['A'].set_xticklabels(rotation = 45, size = 7, labels = [f'{yr}-{mo}' for mo in range(1,13) for yr in range(2020, 2023)])
 axs['A'].set_ylabel('ilość dziennych zakarzeń')
-axs['A'].grid(axis = 'both', c = '0.50')
+axs['A'].grid(axis = 'both', c = '0.80')
 axs['A'].set_title('Dobowa liczba przypadków zakażeń', fontdict = {'fontsize' : 10, 'weight' : 'bold'}, loc = 'left')
 
 sns.lineplot(data = zgony1.rolling(window = 7).mean(), x = 'Data', y = 'zgony', legend = True, ax = axs['B'], label = 'Wszystkie zgony')
@@ -133,7 +130,7 @@ axs['B'].set_xticks(pd.to_datetime([f'{yr}-{mo}-01' for mo in range(1,13) for yr
 axs['B'].set_xticklabels(rotation = 45, size = 7, labels = [f'{yr}-{mo}' for mo in range(1,13) for yr in range(2020, 2023)])
 axs['B'].legend(fontsize =  10, loc = 2)
 axs['B'].set_ylabel('ilość dziennych zgonów')
-axs['B'].grid(axis = 'both', c = '0.50')
+axs['B'].grid(axis = 'both', c = '0.80')
 axs['B'].set_title('Dobowa liczba zgonów', fontdict = {'fontsize' : 10, 'weight' : 'bold'}, loc = 'left')
 
 
@@ -143,7 +140,7 @@ axs['C'].yaxis.tick_right()
 axs['C'].set_yticklabels(woj_labels[1:])
 axs['C'].set_xticks(ticks = [x*200000 for x in range(1, 5)])
 axs['C'].set_xticklabels(rotation = -45,size = 7, labels = [x*200000 for x in range(1,5)])
-axs['C'].grid(axis = 'x', c = '0.50' )
+axs['C'].grid(axis = 'x', c = '0.80' )
 axs['C'].set_title(f'liczba przypadków zakażeń\nz podziałem na województwa\nod dn {przypadki["Data"][0].strftime("%Y-%m-%d")}', fontdict = {'fontsize' : 10, 'weight' : 'bold'})
 
 axs['D'].barh(y = [x for x in range(1,17)], width = zgony_woj.sum(), height = 0.9, color = 'tab:red')
@@ -152,11 +149,8 @@ axs['D'].yaxis.tick_right()
 axs['D'].set_yticklabels(woj_labels[1:])
 axs['D'].set_xticks(ticks = [x*2000 for x in range(1, 8)])
 axs['D'].set_xticklabels(rotation = -45,size = 7, labels = [x*2000 for x in range(1, 8)])
-axs['D'].grid(axis = 'x', c = '0.50' )
+axs['D'].grid(axis = 'x', c = '0.80' )
 axs['D'].set_title(f'liczba dziennych przypadków zakażeń\nz podziałem na województwa\nod dn {przypadki["Data"][0].strftime("%Y-%m-%d")}', fontdict = {'fontsize' : 10, 'weight' : 'bold'})
-
-
-
 
 print(przypadki_woj1.sum())
 
